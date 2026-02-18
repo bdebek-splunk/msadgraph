@@ -1232,6 +1232,61 @@ class MSADGraphConnector(BaseConnector):
         self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
         return action_result.set_status(phantom.APP_SUCCESS)
 
+    def _handle_list_risky_users(self, param):
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        filter_string = param.get("filter_string")
+        select_string = param.get("select_string")
+
+        headers = {}
+        parameters = {}
+
+        endpoint = "/identityProtection/riskyUsers"
+
+        if filter_string:
+            parameters["$filter"] = filter_string
+        if select_string:
+            select_string = [param_value.strip() for param_value in select_string.split(",")]
+            select_string = list(filter(None, select_string))
+            parameters["$select"] = ",".join(param_value for param_value in select_string)
+
+        ret_val = self._handle_pagination(action_result, endpoint, headers=headers, params=parameters)
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        summary = action_result.update_summary({})
+        resp_data = action_result.get_data()
+        if resp_data and resp_data[action_result.get_data_size() - 1] == "Empty response":
+            summary["num_groups"] = (action_result.get_data_size()) - 1
+        else:
+            summary["num_groups"] = action_result.get_data_size()
+
+        self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+    def _handle_get_risky_user(self, param):
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        user_id = param["user_id"]
+
+        endpoint = f"/identityProtection/riskyUsers/{user_id}"
+
+        ret_val, response = self._make_rest_call_helper(action_result, endpoint, method="get")
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        action_result.add_data(response)
+
+        summary = action_result.update_summary({})
+        summary["status"] = f"Successfully retrieved risky user {user_id}"
+
+        self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
+        return action_result.set_status(phantom.APP_SUCCESS)
+
     def _handle_validate_group(self, param):
         self.save_progress(f"In action handler for: {self.get_action_identifier()}")
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1400,6 +1455,12 @@ class MSADGraphConnector(BaseConnector):
 
         elif action_id == "list_user_devices":
             ret_val = self._handle_list_user_devices(param)
+
+        elif action_id == "list_risky_users":
+            ret_val = self._handle_list_risky_users(param)
+
+        elif action_id == "get_risky_user":
+            ret_val = self._handle_get_risky_user(param)
 
         return ret_val
 
