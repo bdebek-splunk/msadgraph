@@ -94,6 +94,7 @@ Choose **either** Delegated OR Application permissions based on your use case:
    - `GroupMember.ReadWrite.All`
    - `RoleManagement.ReadWrite.Directory`
    - `User-PasswordProfile.ReadWrite.All`
+   - `IdentityRiskyUser.Read.All`
 1. Click **Add permissions**
 1. Click **Grant admin consent for [Your Organization]**
 

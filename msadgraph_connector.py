@@ -1259,9 +1259,9 @@ class MSADGraphConnector(BaseConnector):
         summary = action_result.update_summary({})
         resp_data = action_result.get_data()
         if resp_data and resp_data[action_result.get_data_size() - 1] == "Empty response":
-            summary["num_groups"] = (action_result.get_data_size()) - 1
+            summary["num_users"] = (action_result.get_data_size()) - 1
         else:
-            summary["num_groups"] = action_result.get_data_size()
+            summary["num_users"] = action_result.get_data_size()
 
         self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -1283,6 +1283,37 @@ class MSADGraphConnector(BaseConnector):
 
         summary = action_result.update_summary({})
         summary["status"] = f"Successfully retrieved risky user {user_id}"
+
+        self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
+        return action_result.set_status(phantom.APP_SUCCESS)
+    
+    def _handle_list_risky_user_history(self, param):
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        user_id = param["user_id"]
+        select_string = param.get("select_string")
+
+        params = {}
+
+        if select_string:
+            select_string = [param_value.strip() for param_value in select_string.split(",")]
+            select_string = list(filter(None, select_string))
+            params = {"$select": ",".join(param_value for param_value in select_string)}
+
+        endpoint = f"/identityProtection/riskyUsers/{user_id}/history"
+
+        ret_val = self._handle_pagination(action_result, endpoint, params=params)
+
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        summary = action_result.update_summary({})
+        resp_data = action_result.get_data()
+        if resp_data and resp_data[action_result.get_data_size() - 1] == "Empty response":
+            summary["num_history_items"] = (action_result.get_data_size()) - 1
+        else:
+            summary["num_history_items"] = action_result.get_data_size()
 
         self.save_progress(f"Completed action handler for: {self.get_action_identifier()}")
         return action_result.set_status(phantom.APP_SUCCESS)
@@ -1461,6 +1492,9 @@ class MSADGraphConnector(BaseConnector):
 
         elif action_id == "get_risky_user":
             ret_val = self._handle_get_risky_user(param)
+
+        elif action_id == "list_risky_user_history":
+            ret_val = self._handle_list_risky_user_history(param)
 
         return ret_val
 

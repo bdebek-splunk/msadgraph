@@ -4063,6 +4063,182 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "list risky user history",
+            "description": "List the risk history of a risky user",
+            "type": "investigate",
+            "identifier": "list_risky_user_history",
+            "read_only": true,
+            "parameters": {
+                "user_id": {
+                    "description": "Risky User ID",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "order": 0,
+                    "contains": [
+                        "user id"
+                    ]
+                },
+                "select_string": {
+                    "description": "Select string to get additional properties. Separate multiple values with commas",
+                    "data_type": "string",
+                    "order": 1
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.user_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "user@test.com"
+                    ],
+                    "contains": [
+                        "user id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.select_string",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "string",
+                    "example_values": [
+                        "49233413-24c6-4516-a9e1-4d5f87fe34fd"
+                    ],
+                    "column_name": "History ID",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.userId",
+                    "data_type": "string",
+                    "example_values": [
+                        "49233413-24c6-4516-a9e1-4d5f87fe34fd"
+                    ],
+                    "contains": [
+                        "user id"
+                    ],
+                    "column_name": "User ID",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.initiatedBy",
+                    "data_type": "string",
+                    "column_name": "Initiated By",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.activity.riskEventTypes",
+                    "data_type": "string",
+                    "column_name": "Risk Event Types",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.activity.detail",
+                    "data_type": "string",
+                    "column_name": "Activity Detail",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.riskDetail",
+                    "data_type": "string",
+                    "column_name": "Risk Detail",
+                    "column_order": 5
+                },
+                {
+                    "data_path": "action_result.data.*.riskLastUpdatedDateTime",
+                    "data_type": "string",
+                    "example_values": [
+                        "2022-01-01T00:00:00Z"
+                    ],
+                    "column_name": "Risk Last Updated",
+                    "column_order": 6
+                },
+                {
+                    "data_path": "action_result.data.*.riskLevel",
+                    "data_type": "string",
+                    "example_values": [
+                        "low",
+                        "medium",
+                        "high",
+                        "hidden",
+                        "none",
+                        "unknownFutureValue"
+                    ],
+                    "column_name": "Risk Level",
+                    "column_order": 7
+                },
+                {
+                    "data_path": "action_result.data.*.riskState",
+                    "data_type": "string",
+                    "example_values": [
+                        "none",
+                        "confirmedSafe",
+                        "remediated",
+                        "dismissed",
+                        "atRisk",
+                        "unknownFutureValue",
+                        "confirmedCompromised"
+                    ],
+                    "column_name": "Risk State",
+                    "column_order": 8
+                },
+                {
+                    "data_path": "action_result.data.*.userDisplayName",
+                    "data_type": "string",
+                    "column_name": "User Display Name",
+                    "column_order": 9
+                },
+                {
+                    "data_path": "action_result.data.*.userPrincipalName",
+                    "data_type": "string",
+                    "contains": [
+                        "email"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.num_history_items",
+                    "data_type": "numeric",
+                    "example_values": [
+                        5
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Num history items: 5"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "generate token",
             "identifier": "generate_token",
             "description": "Generate a token",
