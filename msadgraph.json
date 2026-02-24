@@ -15,7 +15,7 @@
         }
     ],
     "license": "Copyright (c) 2022-2025 Splunk Inc.",
-    "app_version": "1.4.4",
+    "app_version": "1.4.4-fdse",
     "python_version": "3.9, 3.13",
     "utctime_updated": "2025-10-07T16:21:23.014841Z",
     "package_name": "phantom_msadgraph",
@@ -3919,7 +3919,7 @@
         },
         {
             "action": "get risky user",
-            "description": "Returns risky user information for a given user ID. Risky user information includes the risk level, risk state, and risk detail for the user.",
+            "description": "Returns risky user information for a given user ID.",
             "type": "investigate",
             "identifier": "get_risky_user",
             "read_only": true,
